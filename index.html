@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>TrackYourTeamMates</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <!-- Javascript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+</head>
+<body class="bg-dark" data-spy="scroll" data-target=".navbar" onload="initMap()">
+
+<!-- Modal para editar -->
+<div id="modal" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editando registro</h2>
+                <button class="close ml-auto" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit_user_form" class="form-group">
+                    <label for="usuario_nombre_edit">Nuevo nombre</label>
+                    <input id="usuario_nombre_edit" name="usuario_nombre" type="text" class="form-control" placeholder="Manolo" required>
+
+                    <label for="usuario_apellido_1_edit">Nuevo primer apellido</label>
+                    <input id="usuario_apellido_1_edit" name="usuario_apellido_1" type="text" class="form-control" placeholder="Manolo" required>
+
+                    <label for="usuario_apellido_2_edit">Nuevo segundo apellido</label>
+                    <input id="usuario_apellido_2_edit" name="usuario_apellido_2" type="text" class="form-control" placeholder="Manolo" required>
+
+                    <input type="submit" class="btn btn-primary btn-block mt-5" value="Aceptar">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Barra de navegacion (Scrollspy) -->
+<nav class="navbar bg-dark navbar-dark fixed-top navbar-expand">
+    <div class="container justify-content-center">
+        <div id="navbar" class="justify-content-center">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#section1">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#section2">Track</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido de la pagina -->
+<main>
+    <div class="container">
+
+        <!-- Seccion del formulario -->
+        <div id="section1" class="d-flex justify-content-center align-items-center">
+            <div id="form_content" class="my-5">
+
+                <!-- Titular -->
+                <div class="mb-5 text-center m-auto">
+                    <h1 class="text-danger text-wrap">Comparte tu ubicacion con los demas!</h1>
+                </div>
+
+                <!-- Formulario -->
+                <form id="add_user_form" class="form-group m-auto">
+
+                    <!-- Datos usuario -->
+                    <input name="usuario_nombre" class="form-control mt-3 bg-dark text-white" type="text" placeholder="Nombre" autofocus required>
+                    <input name="usuario_apellido_1" class="form-control mt-3 bg-dark text-white" type="text" placeholder="Primer apellido" required>
+                    <input name="usuario_apellido_2" class="form-control mt-3 bg-dark text-white" type="text" placeholder="Segundo apellido" required>
+
+                    <!-- Geolocalizacion si o no (desviacion)? -->
+                    <div id="geo_select" class="input-group mt-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text bg-dark text-warning" for="grado_anonimato">
+                                <span class="mr-3">Grado de anonimato</span><i class="fas fa-map-marker-alt"></i>
+                            </label>
+                        </div>
+                        <select id="grado_anonimato" name="grado_anonimato" class="custom-select bg-dark text-white">
+                            <option value="normal" selected>Me da igual</option>
+                            <option value="random">Desvia mi localizacion</option>
+                        </select>
+                    </div>
+
+                    <!-- Boton enviar -->
+                    <input class="btn btn-block btn-danger mt-4" type="submit" value="Compartir ubicacion!">
+                </form>
+
+            </div>
+        </div>
+
+        <!-- Mapa -->
+        <div id="section2" class="d-flex justify-content-center">
+            <div class="mt-5 w-100">
+
+                <!-- Contenedor del mapa -->
+                <div id="map" class="rounded-lg mt-2"></div>
+
+                <!-- Lista de registros -->
+                <div id="lista">
+
+                    <!-- Filtro -->
+                    <input id="input" class="form-control mt-4" type="text">
+
+                    <!-- Tabla responsiva -->
+                    <div class="table-responsive" style="max-height: 500px">
+
+                        <!-- Tabla -->
+                        <table id="table" class="table table-hover table-dark table-bordered table-striped hide">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre completo</th>
+                                <th>Fecha de registro</th>
+                                <th>Hora de registro</th>
+                            </tr>
+                            </thead>
+                            <tbody id="cuerpo">
+                            <!-- Se inserta via javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Mensaje cuando la lista esta vacia -->
+                <div id="lista_vacia" class="text-center text-danger mt-4 hide">Todavia no hay datos</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<!-- Scripts -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script src="https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+<script src="./js/googlemaps.js"></script>
+<script src="./js/database.js"></script>
+<script src="./js/index.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $("#input").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#cuerpo tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+body {
+    font-family: Calibri;
+}
+
+/* Desactiva el cursor "pointer" en un enlace "activado"  */
+.active {
+    cursor: default;
+    pointer-events: none;
+}
+
+
+/* Estable el height para la seccion 1 (formulario de insercion) */
+#section1 {
+    height: 920px;
+}
+
+
+/* Width maximo para el contenido del form y cabecera */
+#form_content {
+    max-width: 500px;
+}
+
+/* Fuente del formulario */
+#add_user_form input, #add_user_form select {
+    font-size: 20px;
+}
+
+
+/* Estilos del mapa */
+#map {
+    height: 750px;
+}
+
+#map * {
+    cursor: default;
+}
+
+#map img, #map button {
+    cursor: pointer;
+}
+
+
+/* Estilos de la lista */
+#lista #cuerpo tr td {
+    cursor: pointer;
+}
+
+#lista #cuerpo tr:hover td {
+    background: orange;
+    color: black;
+}
+
+
+/* Los inputs de tipo texto se haran "translucidos" cuando no esten "seleccionados" */
+input[type="text"], select {
+    opacity: .6;
+}
+
+input[type="text"]:focus, select:focus {
+    opacity: 1;
+}
